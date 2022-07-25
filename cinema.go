@@ -11,26 +11,38 @@ import (
 
 const videoPath = "/var/cinema/video.txt"
 
-var adminExtensions string
+var (
+	adminExtensionsURL string
+	externalToken      string
+)
 
 func handleCinemaRequest(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	// Fetch new URL if handed over
 	url := r.URL.Query().Get("url")
-	uuid := r.URL.Query().Get("uuid")
+	userToken := r.URL.Query().Get("token")
 
 	if len(url) > 0 {
-		updateVideo(url, uuid, w)
+		updateVideo(url, userToken, w)
 		return
 	}
-	showVideo(uuid, w)
+	showVideo(userToken, w)
 }
 
 func main() {
 	log.SetFlags(0)
+	var exists bool
 
-	adminExtensions = os.Getenv("ADMIN_EXTENSIONS")
+	adminExtensionsURL, exists = os.LookupEnv("ADMIN_EXTENSIONS")
+	if !exists {
+		log.Fatalln("No admin extensions URL set")
+	}
+
+	externalToken, exists = os.LookupEnv("EXTERNAL_TOKEN")
+	if !exists {
+		log.Fatalln("No external token set")
+	}
 
 	r := mux.NewRouter()
 	r.HandleFunc("/", handleCinemaRequest)

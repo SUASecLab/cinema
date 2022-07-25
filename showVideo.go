@@ -9,11 +9,11 @@ import (
 	"github.com/SUASecLab/workadventure_admin_extensions/extensions"
 )
 
-func showVideo(uuid string, w http.ResponseWriter) {
+func showVideo(userToken string, w http.ResponseWriter) {
 	// Check if user exists
-	exists, errorMsg := extensions.UserExists(adminExtensions, uuid)
+	exists, errorMsg := extensions.UserExists(adminExtensionsURL, userToken)
 	if !exists {
-		w.WriteHeader(403)
+		w.WriteHeader(http.StatusForbidden)
 		log.Println(errorMsg)
 		fmt.Fprintln(w, errorMsg)
 		return
@@ -21,7 +21,7 @@ func showVideo(uuid string, w http.ResponseWriter) {
 
 	video, err := os.ReadFile(videoPath)
 	if err != nil {
-		w.WriteHeader(404)
+		w.WriteHeader(http.StatusNotFound)
 		log.Println("No video stored:", err)
 		return
 	}
