@@ -26,5 +26,5 @@ func showVideo(uuid string, w http.ResponseWriter) {
 		return
 	}
 
-	fmt.Fprintf(w, "https://www.youtube.com/embed/"+string(video))
+	fmt.Fprintf(w, "https://www.youtube-nocookie.com/embed/"+string(video))
 }
