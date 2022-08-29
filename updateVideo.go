@@ -11,10 +11,10 @@ import (
 )
 
 func updateVideo(videoUrl, userToken string, w http.ResponseWriter) {
-	// Check if user exists
-	allowed, err := extensions.AuthRequestAndDecision("http://" + sidecarUrl +
+	// Check if user is allowed to update the video
+	decision, err := extensions.GetAuthDecision("http://" + sidecarUrl +
 		"/auth?token=" + userToken + "&service=updateVideo")
-	if !allowed {
+	if !decision.Allowed {
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}
