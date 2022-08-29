@@ -12,8 +12,7 @@ import (
 const videoPath = "/var/cinema/video.txt"
 
 var (
-	adminExtensionsURL string
-	externalToken      string
+	sidecarUrl string
 )
 
 func handleCinemaRequest(w http.ResponseWriter, r *http.Request) {
@@ -34,14 +33,9 @@ func main() {
 	log.SetFlags(0)
 	var exists bool
 
-	adminExtensionsURL, exists = os.LookupEnv("ADMIN_EXTENSIONS")
+	sidecarUrl, exists = os.LookupEnv("SIDECAR_URL")
 	if !exists {
-		log.Fatalln("No admin extensions URL set")
-	}
-
-	externalToken, exists = os.LookupEnv("EXTERNAL_TOKEN")
-	if !exists {
-		log.Fatalln("No external token set")
+		log.Fatalln("No sidecar URL set")
 	}
 
 	r := mux.NewRouter()

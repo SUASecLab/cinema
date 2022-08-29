@@ -12,11 +12,16 @@ import (
 
 func updateVideo(videoUrl, userToken string, w http.ResponseWriter) {
 	// Check if user exists
-	exists, errorMsg := extensions.UserExists(adminExtensionsURL, userToken)
-	if !exists {
+	allowed, err := extensions.AuthRequestAndDecision("http://" + sidecarUrl +
+		"/auth?token=" + userToken + "&service=updateVideo")
+	if !allowed {
 		w.WriteHeader(http.StatusForbidden)
-		log.Println(errorMsg)
-		fmt.Fprintln(w, errorMsg)
+		return
+	}
+
+	if err != nil {
+		log.Println("Could not update video: ", err)
+		fmt.Fprintf(w, "Could not update video")
 		return
 	}
 

@@ -11,10 +11,16 @@ import (
 
 func showVideo(userToken string, w http.ResponseWriter) {
 	// Check if user exists
-	exists, errorMsg := extensions.UserExists(adminExtensionsURL, userToken)
-	if !exists {
+	allowed, err := extensions.AuthRequestAndDecision("http://" + sidecarUrl +
+		"/auth?token=" + userToken + "&service=showVideo")
+	if !allowed {
 		w.WriteHeader(http.StatusForbidden)
-		log.Println(errorMsg)
+		return
+	}
+
+	if err != nil {
+		errorMsg := "Could not get authentication decision"
+		log.Println(errorMsg, err)
 		fmt.Fprintln(w, errorMsg)
 		return
 	}
