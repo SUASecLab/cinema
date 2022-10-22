@@ -9,10 +9,9 @@ import (
 	"github.com/gorilla/mux"
 )
 
-const videoPath = "/var/cinema/video.txt"
-
 var (
 	sidecarUrl string
+	video      string
 )
 
 func handleCinemaRequest(w http.ResponseWriter, r *http.Request) {
@@ -32,6 +31,9 @@ func handleCinemaRequest(w http.ResponseWriter, r *http.Request) {
 func main() {
 	log.SetFlags(0)
 	var exists bool
+
+	// Set SNZR video
+	video = "aWKusTpZ3FI"
 
 	sidecarUrl, exists = os.LookupEnv("SIDECAR_URL")
 	if !exists {

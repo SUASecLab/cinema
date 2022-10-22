@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-	"os"
 
 	"github.com/SUASecLab/workadventure_admin_extensions/extensions"
 )
@@ -50,24 +49,6 @@ func updateVideo(videoUrl, userToken string, w http.ResponseWriter) {
 		return
 	}
 
-	videoFile, err := os.Create(videoPath)
-	defer videoFile.Close()
-
-	msg := "Could store video:"
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Println(msg, err)
-		fmt.Fprintln(w, msg, err)
-		return
-	}
-
-	_, err = videoFile.WriteString(videoId)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Println(msg, err)
-		fmt.Fprintln(w, msg, err)
-		return
-	}
-
+	video = videoId
 	fmt.Fprintf(w, "Stored video successfully")
 }
