@@ -1,11 +1,16 @@
-FROM golang:1.20-alpine
+FROM golang:1.21-alpine AS golang-builder
 
 RUN addgroup -S cinema && adduser -S cinema -G cinema
 
 WORKDIR /src/app
 COPY --chown=cinema:cinema . .
 
-USER cinema
-
 RUN go get
-RUN go install
+RUN go build
+
+FROM scratch
+COPY --from=golang-builder /src/app/cinema /cinema
+COPY --from=golang-builder /etc/passwd /etc/passwd
+
+USER cinema
+CMD [ "/cinema" ]
