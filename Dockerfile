@@ -1,4 +1,4 @@
-FROM golang:1.22-alpine AS golang-builder
+FROM golang:1.23-alpine AS golang-builder
 
 RUN addgroup -S cinema && adduser -S cinema -G cinema
 
