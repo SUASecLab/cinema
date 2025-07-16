@@ -1,6 +1,7 @@
 package main
 
 import (
+	"html"
 	"os"
 
 	"log"
@@ -20,6 +21,10 @@ func handleCinemaRequest(w http.ResponseWriter, r *http.Request) {
 	// Fetch new URL if handed over
 	url := r.URL.Query().Get("url")
 	userToken := r.URL.Query().Get("token")
+
+	// escape parameters
+	url = html.EscapeString(url)
+	userToken = html.EscapeString(userToken)
 
 	if len(url) > 0 {
 		updateVideo(url, userToken, w)
